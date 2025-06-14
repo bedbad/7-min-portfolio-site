@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: resume-request-server
+    name: bedbadnet
     env: python
     plan: free
     buildCommand: "pip install ."
