@@ -1,0 +1,8 @@
+services:
+  - type: web
+    name: resume-request-server
+    env: python
+    plan: free
+    buildCommand: "uv pip install ."
+    startCommand: "python main.py"
+    autoDeploy: true
