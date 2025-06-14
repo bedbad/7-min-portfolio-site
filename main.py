@@ -2,6 +2,7 @@ import aiohttp
 from aiohttp import web
 import logging
 from logging.handlers import RotatingFileHandler
+import os
 
 # Configure logging
 logging.basicConfig(
@@ -137,4 +138,5 @@ def create_app():
 app = create_app()
 
 if __name__ == "__main__":
-    web.run_app(app, host="0.0.0.0", port=8000) 
+    port = int(os.environ.get("PORT", 8000))  # 10000 is a safe local default
+    web.run_app(app, host="0.0.0.0", port=port) 
