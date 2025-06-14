@@ -109,24 +109,29 @@ async def handle_index(request):
 
 async def handle_submit(request):
     try:
-        data = await request.post()
-        email = data.get('email', '')
-        
+        if request.content_type.startswith("application/json"):
+            data = await request.json()
+            email = data.get('email', '')
+        else:
+            data = await request.post()
+            email = data.get('email', '')
+
+        logger.info(f"POST data: {data}")
+
         if not email:
             return web.json_response({
                 'message': 'Email is required'
             }, status=400)
-        
-        # Here you would implement the email sending logic
+
         logger.info(f"Received resume request from: {email}")
-        
+
         return web.json_response({
             'message': f'Thank you! We will send the resume to {email} shortly.'
         })
     except Exception as e:
-        logger.error(f"Error processing request: {str(e)}")
+        logger.exception("Error processing request")
         return web.json_response({
-            'message': 'An error occurred while processing your request'
+            'message': f'An error occurred while processing your request: {str(e)}'
         }, status=500)
 
 def create_app():
