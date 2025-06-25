@@ -1,0 +1,16 @@
+[
+    {
+        "title": "Computer Vision Model",
+        "description": "YOLO-based object detection system.",
+        "technologies": ["Python", "PyTorch", "OpenCV", "Docker"],
+        "github": "https://github.com/yourusername/project1",
+        "demo": "https://demo.example.com"
+    },
+    {
+        "title": "NLP Chatbot",
+        "description": "Conversational AI using transformers.",
+        "technologies": ["Python", "TensorFlow", "BERT", "FastAPI"],
+        "github": "https://github.com/yourusername/project2",
+        "demo": "https://demo.example.com"
+    }
+] 

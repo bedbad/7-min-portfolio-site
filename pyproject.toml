@@ -3,16 +3,17 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "bedbadnet"
+name = "portfolio-site"
 version = "0.1.0"
-description = "HTTPS server for collecting resume requests"
+description = "ML Specialist Portfolio Website"
 requires-python = ">=3.8"
 dependencies = [
-    "aiohttp>=3.9.3"
+    "aiohttp>=3.9.3",
+    "aiohttp-jinja2>=1.5"
 ]
 
 [project.scripts]
-resume-server = "server:create_app"
+portfolio-server = "portfolio_site.app:create_app"
 
 [tool.hatch.build.targets.wheel]
-packages = ["."]
+packages = ["portfolio_site"]

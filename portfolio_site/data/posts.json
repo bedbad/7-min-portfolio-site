@@ -1,0 +1,16 @@
+[
+    {
+        "title": "Understanding Transformer Architecture",
+        "excerpt": "Deep dive into transformers.",
+        "date": "2024-01-15",
+        "read_time": "8 min read",
+        "url": "https://blog.example.com/transformer-architecture"
+    },
+    {
+        "title": "Building Production ML Systems",
+        "excerpt": "Deploying ML at scale.",
+        "date": "2024-01-10",
+        "read_time": "12 min read",
+        "url": "https://blog.example.com/production-ml"
+    }
+] 

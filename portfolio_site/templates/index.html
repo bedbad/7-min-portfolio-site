@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ about.name }} - {{ about.title }}</title>
+    <link rel="stylesheet" href="/static/style.css?v={{ cache_bust }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="profile">
+                <img src="/static/profile.jpg" alt="{{ about.name }}" class="profile-image">
+                <h1 class="name">{{ about.name }}</h1>
+                <h2 class="title">{{ about.title }}</h2>
+                <p class="bio">{{ about.bio }}</p>
+                <div class="social-links">
+                    <a href="{{ about.github }}" target="_blank" rel="noopener">GitHub</a>
+                    <a href="{{ about.linkedin }}" target="_blank" rel="noopener">LinkedIn</a>
+                    <a href="mailto:{{ about.email }}">Email</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Unified Content Feed: Projects, Posts -->
+    <section id="feed" class="section">
+        <div class="container">
+            {% for item in all_content %}
+                {% if item.technologies is defined %}
+                <!-- Project Card -->
+                <article class="project-card">
+                    <h3 class="project-title">{{ item.title }}</h3>
+                    <p class="project-description">{{ item.description }}</p>
+                    <div class="project-tech">
+                        {% for tech in item.technologies %}
+                        <span class="tech-tag">{{ tech }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="project-links">
+                        {% if item.github %}
+                        <a href="{{ item.github }}" target="_blank" rel="noopener" class="project-link">GitHub</a>
+                        {% endif %}
+                        {% if item.demo %}
+                        <a href="{{ item.demo }}" target="_blank" rel="noopener" class="project-link">Live Demo</a>
+                        {% endif %}
+                    </div>
+                    <div class="post-meta">
+                        <span class="post-date">{{ item.date or '' }}</span>
+                    </div>
+                    <button class="share-btn" aria-label="Share this project" onclick="openShareMenu(event, '{{ item.title }}', '{{ item.github or item.demo or '' }}', this)">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                    </button>
+                </article>
+                {% else %}
+                <!-- Post Card -->
+                <article class="post-card">
+                    <h3 class="post-title">{{ item.title }}</h3>
+                    <p class="post-excerpt">{{ item.excerpt }}</p>
+                    <div class="post-meta">
+                        <span class="post-date">{{ item.date or '' }}</span>
+                        {% if item.read_time %}<span class="post-read-time">{{ item.read_time }}</span>{% endif %}
+                    </div>
+                    {% if item.url %}
+                        <a href="{{ item.url }}" target="_blank" rel="noopener" class="post-link">Read More →</a>
+                    {% endif %}
+                    <button class="share-btn" aria-label="Share this post" onclick="openShareMenu(event, '{{ item.title }}', '{{ item.url or '' }}', this)">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                    </button>
+                </article>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Resume Request Section -->
+    <section id="resume" class="section">
+        <div class="container">
+            <h2 class="section-title">{{ strings.request_resume }}</h2>
+            <div class="form-container">
+                <p>{{ strings.enter_details }}</p>
+                <form method="POST" action="/submit" id="resume-form">
+                    <input type="email" name="email" placeholder="{{ strings.email_placeholder }}" required>
+                    <input type="text" name="who" placeholder="{{ strings.who_placeholder }}" required>
+                    <input type="text" name="regarding" placeholder="{{ strings.regarding_placeholder }}" required>
+                    <button type="submit">{{ strings.send_resume }}</button>
+                </form>
+                <div id="message"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fixed Navigation -->
+    <nav class="fixed-nav">
+        <div class="container">
+            <div class="nav-links">
+                <a href="#feed" class="nav-link">{{ strings.work }}</a>
+                <a href="#resume" class="nav-link">{{ strings.resume }}</a>
+                <a href="#top" class="nav-link top-link">{{ strings.top }}</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Smooth Scroll Script -->
+    <script>
+        // Smooth scrolling for internal links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const href = this.getAttribute('href');
+                if (href === '#top') {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                    const target = document.querySelector(href);
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                }
+            });
+        });
+
+        // Add scroll effect to fixed nav
+        window.addEventListener('scroll', function() {
+            const nav = document.querySelector('.fixed-nav');
+            if (window.scrollY > 100) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        // Resume form submission
+        document.getElementById('resume-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const form = this;
+            const messageDiv = document.getElementById('message');
+            fetch('/submit', {
+                method: 'POST',
+                body: new FormData(form)
+            })
+            .then(response => response.json())
+            .then(data => {
+                messageDiv.textContent = data.message;
+                messageDiv.className = 'message success';
+                form.reset();
+            })
+            .catch(error => {
+                messageDiv.textContent = 'An error occurred. Please try again.';
+                messageDiv.className = 'message error';
+            });
+        });
+
+        // Social share menu logic
+        function openShareMenu(event, title, url, btn) {
+            event.stopPropagation();
+            closeShareMenus();
+            if (!url) url = window.location.href;
+            const shareMenu = document.createElement('div');
+            shareMenu.className = 'share-menu';
+            shareMenu.innerHTML = `
+                <button data-share="facebook">Facebook</button>
+                <button data-share="twitter">Twitter</button>
+                <button data-share="linkedin">LinkedIn</button>
+                <button data-share="reddit">Reddit</button>
+                <button data-share="embed">Embed</button>
+            `;
+            btn.parentNode.appendChild(shareMenu);
+            shareMenu.addEventListener('click', function(e) {
+                if (e.target.tagName === 'BUTTON') {
+                    const type = e.target.getAttribute('data-share');
+                    if (type === 'facebook') {
+                        window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url), '_blank');
+                    } else if (type === 'twitter') {
+                        window.open('https://twitter.com/intent/tweet?url=' + encodeURIComponent(url) + '&text=' + encodeURIComponent(title), '_blank');
+                    } else if (type === 'linkedin') {
+                        window.open('https://www.linkedin.com/shareArticle?mini=true&url=' + encodeURIComponent(url) + '&title=' + encodeURIComponent(title), '_blank');
+                    } else if (type === 'reddit') {
+                        window.open('https://reddit.com/submit?url=' + encodeURIComponent(url) + '&title=' + encodeURIComponent(title), '_blank');
+                    } else if (type === 'embed') {
+                        copyEmbedCode(title, url);
+                    }
+                    closeShareMenus();
+                }
+            });
+            document.addEventListener('click', closeShareMenus, { once: true });
+        }
+        function closeShareMenus() {
+            document.querySelectorAll('.share-menu').forEach(menu => menu.remove());
+        }
+        function copyEmbedCode(title, url) {
+            const code = `<a href="${url}" target="_blank" rel="noopener">${title}</a>`;
+            navigator.clipboard.writeText(code).then(() => {
+                alert('Embed code copied!');
+            });
+        }
+    </script>
+</body>
+</html> 

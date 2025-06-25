@@ -1,0 +1,17 @@
+{
+  "en": {
+    "request_resume": "Request Resume",
+    "enter_details": "Enter your details below and we'll send you the resume.",
+    "email_placeholder": "Enter your email",
+    "who_placeholder": "Who is requesting?",
+    "regarding_placeholder": "In regards to what?",
+    "send_resume": "Send Resume",
+    "projects": "Projects",
+    "work": "Work",
+    "resume": "Resume",
+    "top": "Top",
+    "success_message": "Thank you! We will send the resume to {email} regarding '{regarding}' shortly.",
+    "error_required": "All fields are required.",
+    "error_generic": "An error occurred. Please try again."
+  }
+} 
