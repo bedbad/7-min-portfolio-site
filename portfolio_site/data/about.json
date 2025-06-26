@@ -1,8 +1,11 @@
 {
-    "name": "Your Name",
-    "title": "Machine Learning Specialist",
-    "bio": "Passionate ML engineer with expertise in deep learning, computer vision, and NLP",
-    "email": "your.email@example.com",
-    "github": "https://github.com/yourusername",
-    "linkedin": "https://linkedin.com/in/yourusername"
-} 
+  "name": "Your Name",
+  "title": "Machine Learning Specialist",
+  "bio": "Passionate ML engineer with expertise in deep learning, computer vision, and NLP",
+  "links": [
+    {
+      "type": "email",
+      "value": "antonyuk@bu.edu"
+    }
+  ]
+}

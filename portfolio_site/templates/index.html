@@ -19,9 +19,38 @@
                 <h2 class="title">{{ about.title }}</h2>
                 <p class="bio">{{ about.bio }}</p>
                 <div class="social-links">
-                    <a href="{{ about.github }}" target="_blank" rel="noopener">GitHub</a>
-                    <a href="{{ about.linkedin }}" target="_blank" rel="noopener">LinkedIn</a>
-                    <a href="mailto:{{ about.email }}">Email</a>
+                    {% for link in about.links %}
+                        <a href="{% if link.type == 'email' %}mailto:{{ link.value }}{% else %}{{ link.value }}{% endif %}" target="_blank" rel="noopener" aria-label="{{ link.type|capitalize }}">
+                            {% if link.type == 'github' %}
+                                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.58 2 12.26c0 4.5 2.87 8.32 6.84 9.67.5.09.68-.22.68-.48 0-.24-.01-.87-.01-1.7-2.78.62-3.37-1.36-3.37-1.36-.45-1.18-1.1-1.5-1.1-1.5-.9-.63.07-.62.07-.62 1 .07 1.53 1.05 1.53 1.05.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.7 0 0 .84-.28 2.75 1.05A9.38 9.38 0 0 1 12 6.8c.85.004 1.7.12 2.5.35 1.9-1.33 2.74-1.05 2.74-1.05.55 1.4.2 2.44.1 2.7.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.8-4.57 5.06.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.8 0 .26.18.57.69.47A10.01 10.01 0 0 0 22 12.26C22 6.58 17.52 2 12 2Z"/></svg>
+                            {% elif link.type == 'linkedin' %}
+                                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="2"/><path d="M7 10v7M7 7v.01M12 17v-4a2 2 0 0 1 4 0v4"/></svg>
+                            {% elif link.type == 'twitter' %}
+                                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53A4.48 4.48 0 0 0 22.4 1.64a9.09 9.09 0 0 1-2.88 1.1A4.48 4.48 0 0 0 16.11 0c-2.5 0-4.5 2.01-4.5 4.5 0 .35.04.7.11 1.03C7.69 5.4 4.07 3.7 1.64 1.15c-.38.65-.6 1.4-.6 2.2 0 1.52.77 2.86 1.94 3.65A4.48 4.48 0 0 1 .96 6.1v.06c0 2.13 1.52 3.91 3.54 4.31-.37.1-.76.16-1.16.16-.28 0-.55-.03-.81-.08.55 1.72 2.16 2.97 4.07 3A9.05 9.05 0 0 1 0 19.54a12.8 12.8 0 0 0 6.95 2.04c8.34 0 12.9-6.91 12.9-12.9 0-.2 0-.39-.01-.58A9.22 9.22 0 0 0 23 3Z"/></svg>
+                            {% elif link.type == 'stackoverflow' %}
+                                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 17h8M8.5 13.5l7 1M9.5 10.5l6 2M11 7l5 3"/></svg>
+                            {% elif link.type == 'reddit' %}
+                                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="8.5" cy="13.5" r="1.5"/><circle cx="15.5" cy="13.5" r="1.5"/><path d="M12 17c2.5 0 4.5-1.12 4.5-2.5h-9C7.5 15.88 9.5 17 12 17Z"/><circle cx="12" cy="7.5" r="1.5"/></svg>
+                            {% elif link.type == 'email' %}
+                                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,6 12,13 2,6"/></svg>
+                            {% elif link.type == 'website' %}
+                                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 0 20M12 2a15.3 15.3 0 0 0 0 20"/></svg>
+                            {% endif %}
+                            <span style="font-weight:900; margin-left:8px;">
+                                {% if link.type == 'email' %}
+                                    {{ link.value }}
+                                {% elif link.type == 'github' %}
+                                    {% if 'github.com/' in link.value %}
+                                        {{ link.value.split('github.com/')[-1] }}
+                                    {% else %}
+                                        {{ link.value }}
+                                    {% endif %}
+                                {% elif link.type == 'website' %}
+                                    {{ link.value }}
+                                {% endif %}
+                            </span>
+                        </a>
+                    {% endfor %}
                 </div>
             </div>
         </div>
@@ -30,49 +59,68 @@
     <!-- Unified Content Feed: Projects, Posts -->
     <section id="feed" class="section">
         <div class="container">
-            {% for item in all_content %}
-                {% if item.technologies is defined %}
-                <!-- Project Card -->
-                <article class="project-card">
-                    <h3 class="project-title">{{ item.title }}</h3>
-                    <p class="project-description">{{ item.description }}</p>
-                    <div class="project-tech">
-                        {% for tech in item.technologies %}
-                        <span class="tech-tag">{{ tech }}</span>
+            <h2 class="section-title">{{ strings.work }}</h2>
+            {% for entry in entries %}
+            <a href="/entry/{{ loop.index0 }}" class="entry-link" style="text-decoration:none;color:inherit;display:block;">
+            <article class="entry-card">
+                {% if entry.title %}
+                    <h3 class="entry-title">{{ entry.title }}</h3>
+                {% endif %}
+                {% if entry.excerpt %}
+                    <div class="entry-excerpt">{{ entry.excerpt }}</div>
+                {% endif %}
+                {% if entry.content %}
+                    <div class="entry-content">{{ entry.content }}</div>
+                {% endif %}
+                <div class="entry-meta">
+                    {% if entry.date %}<span class="entry-date">{{ entry.date }}</span>{% endif %}
+                    {% if entry.read_time %}<span class="entry-read-time">{{ entry.read_time }}</span>{% endif %}
+                </div>
+                {% if entry.technologies %}
+                    <div class="entry-tech">
+                        {% for tech in entry.technologies %}
+                            <span class="tech-tag">{{ tech }}</span>
                         {% endfor %}
                     </div>
-                    <div class="project-links">
-                        {% if item.github %}
-                        <a href="{{ item.github }}" target="_blank" rel="noopener" class="project-link">GitHub</a>
-                        {% endif %}
-                        {% if item.demo %}
-                        <a href="{{ item.demo }}" target="_blank" rel="noopener" class="project-link">Live Demo</a>
-                        {% endif %}
-                    </div>
-                    <div class="post-meta">
-                        <span class="post-date">{{ item.date or '' }}</span>
-                    </div>
-                    <button class="share-btn" aria-label="Share this project" onclick="openShareMenu(event, '{{ item.title }}', '{{ item.github or item.demo or '' }}', this)">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-                    </button>
-                </article>
-                {% else %}
-                <!-- Post Card -->
-                <article class="post-card">
-                    <h3 class="post-title">{{ item.title }}</h3>
-                    <p class="post-excerpt">{{ item.excerpt }}</p>
-                    <div class="post-meta">
-                        <span class="post-date">{{ item.date or '' }}</span>
-                        {% if item.read_time %}<span class="post-read-time">{{ item.read_time }}</span>{% endif %}
-                    </div>
-                    {% if item.url %}
-                        <a href="{{ item.url }}" target="_blank" rel="noopener" class="post-link">Read More →</a>
-                    {% endif %}
-                    <button class="share-btn" aria-label="Share this post" onclick="openShareMenu(event, '{{ item.title }}', '{{ item.url or '' }}', this)">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-                    </button>
-                </article>
                 {% endif %}
+                {% if entry.links %}
+                    <div class="entry-links social-links">
+                        {% for link in entry.links %}
+                            <a href="{% if link.type == 'email' %}mailto:{{ link.value }}{% else %}{{ link.value }}{% endif %}" target="_blank" rel="noopener" aria-label="{{ link.type|capitalize }}">
+                                {% if link.type == 'github' %}
+                                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.58 2 12.26c0 4.5 2.87 8.32 6.84 9.67.5.09.68-.22.68-.48 0-.24-.01-.87-.01-1.7-2.78.62-3.37-1.36-3.37-1.36-.45-1.18-1.1-1.5-1.1-1.5-.9-.63.07-.62.07-.62 1 .07 1.53 1.05 1.53 1.05.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.7 0 0 .84-.28 2.75 1.05A9.38 9.38 0 0 1 12 6.8c.85.004 1.7.12 2.5.35 1.9-1.33 2.74-1.05 2.74-1.05.55 1.4.2 2.44.1 2.7.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.8-4.57 5.06.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.8 0 .26.18.57.69.47A10.01 10.01 0 0 0 22 12.26C22 6.58 17.52 2 12 2Z"/></svg>
+                                {% elif link.type == 'linkedin' %}
+                                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="2"/><path d="M7 10v7M7 7v.01M12 17v-4a2 2 0 0 1 4 0v4"/></svg>
+                                {% elif link.type == 'twitter' %}
+                                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53A4.48 4.48 0 0 0 22.4 1.64a9.09 9.09 0 0 1-2.88 1.1A4.48 4.48 0 0 0 16.11 0c-2.5 0-4.5 2.01-4.5 4.5 0 .35.04.7.11 1.03C7.69 5.4 4.07 3.7 1.64 1.15c-.38.65-.6 1.4-.6 2.2 0 1.52.77 2.86 1.94 3.65A4.48 4.48 0 0 1 .96 6.1v.06c0 2.13 1.52 3.91 3.54 4.31-.37.1-.76.16-1.16.16-.28 0-.55-.03-.81-.08.55 1.72 2.16 2.97 4.07 3A9.05 9.05 0 0 1 0 19.54a12.8 12.8 0 0 0 6.95 2.04c8.34 0 12.9-6.91 12.9-12.9 0-.2 0-.39-.01-.58A9.22 9.22 0 0 0 23 3Z"/></svg>
+                                {% elif link.type == 'stackoverflow' %}
+                                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 17h8M8.5 13.5l7 1M9.5 10.5l6 2M11 7l5 3"/></svg>
+                                {% elif link.type == 'reddit' %}
+                                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="8.5" cy="13.5" r="1.5"/><circle cx="15.5" cy="13.5" r="1.5"/><path d="M12 17c2.5 0 4.5-1.12 4.5-2.5h-9C7.5 15.88 9.5 17 12 17Z"/><circle cx="12" cy="7.5" r="1.5"/></svg>
+                                {% elif link.type == 'email' %}
+                                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,6 12,13 2,6"/></svg>
+                                {% elif link.type == 'website' %}
+                                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 0 20M12 2a15.3 15.3 0 0 0 0 20"/></svg>
+                                {% endif %}
+                                <span style="font-weight:900; margin-left:8px;">
+                                    {% if link.type == 'email' %}
+                                        {{ link.value }}
+                                    {% elif link.type == 'github' %}
+                                        {% if 'github.com/' in link.value %}
+                                            {{ link.value.split('github.com/')[-1] }}
+                                        {% else %}
+                                            {{ link.value }}
+                                        {% endif %}
+                                    {% elif link.type == 'website' %}
+                                        {{ link.value }}
+                                    {% endif %}
+                                </span>
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </article>
+            </a>
             {% endfor %}
         </div>
     </section>
@@ -165,16 +213,17 @@
             const shareMenu = document.createElement('div');
             shareMenu.className = 'share-menu';
             shareMenu.innerHTML = `
-                <button data-share="facebook">Facebook</button>
-                <button data-share="twitter">Twitter</button>
-                <button data-share="linkedin">LinkedIn</button>
-                <button data-share="reddit">Reddit</button>
-                <button data-share="embed">Embed</button>
+                <button data-share="facebook"><span class="share-icon">${svgFacebook()}</span> Facebook</button>
+                <button data-share="twitter"><span class="share-icon">${svgTwitter()}</span> Twitter</button>
+                <button data-share="linkedin"><span class="share-icon">${svgLinkedIn()}</span> LinkedIn</button>
+                <button data-share="reddit"><span class="share-icon">${svgReddit()}</span> Reddit</button>
+                <button data-share="embed"><span class="share-icon">${svgEmbed()}</span> Embed</button>
             `;
             btn.parentNode.appendChild(shareMenu);
             shareMenu.addEventListener('click', function(e) {
-                if (e.target.tagName === 'BUTTON') {
-                    const type = e.target.getAttribute('data-share');
+                if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
+                    const button = e.target.closest('button');
+                    const type = button.getAttribute('data-share');
                     if (type === 'facebook') {
                         window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url), '_blank');
                     } else if (type === 'twitter') {
@@ -199,6 +248,21 @@
             navigator.clipboard.writeText(code).then(() => {
                 alert('Embed code copied!');
             });
+        }
+        function svgFacebook() {
+            return `<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="4"/><path d="M16 8h-2a2 2 0 0 0-2 2v2h4l-.5 3h-3.5v7"/></svg>`;
+        }
+        function svgTwitter() {
+            return `<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53A4.48 4.48 0 0 0 22.4 1.64a9.09 9.09 0 0 1-2.88 1.1A4.48 4.48 0 0 0 16.11 0c-2.5 0-4.5 2.01-4.5 4.5 0 .35.04.7.11 1.03C7.69 5.4 4.07 3.7 1.64 1.15c-.38.65-.6 1.4-.6 2.2 0 1.52.77 2.86 1.94 3.65A4.48 4.48 0 0 1 .96 6.1v.06c0 2.13 1.52 3.91 3.54 4.31-.37.1-.76.16-1.16.16-.28 0-.55-.03-.81-.08.55 1.72 2.16 2.97 4.07 3A9.05 9.05 0 0 1 0 19.54a12.8 12.8 0 0 0 6.95 2.04c8.34 0 12.9-6.91 12.9-12.9 0-.2 0-.39-.01-.58A9.22 9.22 0 0 0 23 3Z"/></svg>`;
+        }
+        function svgLinkedIn() {
+            return `<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="4"/><path d="M7 10v7M7 7v.01M12 17v-4a2 2 0 0 1 4 0v4"/></svg>`;
+        }
+        function svgReddit() {
+            return `<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="8.5" cy="13.5" r="1.5"/><circle cx="15.5" cy="13.5" r="1.5"/><path d="M12 17c2.5 0 4.5-1.12 4.5-2.5h-9C7.5 15.88 9.5 17 12 17Z"/><circle cx="12" cy="7.5" r="1.5"/></svg>`;
+        }
+        function svgEmbed() {
+            return `<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 12h8M12 8v8"/></svg>`;
         }
     </script>
 </body>

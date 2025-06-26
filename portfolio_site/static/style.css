@@ -75,17 +75,40 @@ html, body {
 }
 .social-links {
     display: flex;
-    gap: 18px;
+    gap: 24px;
     margin-top: 8px;
+    align-items: center;
+    flex-wrap: wrap;
 }
 .social-links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
     color: #000;
-    font-weight: 700;
-    text-decoration: underline;
+    font-weight: 900;
+    text-decoration: none;
     transition: none;
+    padding: 0;
+    margin: 0 6px 6px 0;
+    line-height: 1.2;
 }
 .social-links a:hover {
+    text-decoration: underline;
     color: #000;
+}
+.social-links svg {
+    display: inline-block;
+    vertical-align: middle;
+    width: 28px;
+    height: 28px;
+    margin: 0;
+}
+.social-links span {
+    font-weight: 900;
+    font-size: 1.08rem;
+    margin: 0;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 /* Projects */
@@ -94,7 +117,7 @@ html, body {
     flex-direction: column;
     gap: 24px;
 }
-.project-card, .post-card {
+.project-card, .post-card, .entry-card {
     background: #fff;
     border-radius: 0;
     border: 2px solid #000;
@@ -106,20 +129,26 @@ html, body {
     margin-bottom: 16px;
     position: relative;
 }
-.project-title, .post-title {
+.project-title, .post-title, .entry-title {
     font-size: 1.3rem;
     font-weight: 900;
     color: #000;
     margin: 0 0 8px 0;
     text-transform: uppercase;
 }
-.project-description, .post-excerpt {
+.project-description, .post-excerpt, .entry-excerpt {
     font-size: 1.08rem;
     font-weight: 700;
     color: #000;
     margin-bottom: 10px;
 }
-.project-tech {
+.entry-content {
+    font-size: 1.08rem;
+    font-weight: 700;
+    color: #000;
+    margin-bottom: 10px;
+}
+.project-tech, .entry-tech {
     margin-bottom: 8px;
 }
 .tech-tag {
@@ -134,7 +163,17 @@ html, body {
     margin-right: 6px;
     margin-bottom: 3px;
 }
-.project-links, .post-meta {
+.project-links, .post-meta, .entry-meta {
+    margin-top: 6px;
+    font-size: 0.97rem;
+    color: #000;
+    margin-bottom: 4px;
+}
+.entry-date, .entry-read-time {
+    font-weight: 700;
+    margin-right: 16px;
+}
+.entry-links {
     margin-top: 6px;
 }
 .project-link, .post-link {
@@ -327,10 +366,21 @@ html, body {
     border-radius: 0;
     font-size: 1rem;
     transition: background 0.1s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 .share-menu button:hover, .share-menu button:focus {
     background: #000;
     color: #fff;
+}
+.share-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    margin-right: 0;
 }
 
 .section#resume {

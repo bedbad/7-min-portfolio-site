@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        body { background: #fff; color: #000; }
+        .admin-section { border: 2px solid #000; margin: 32px 0; padding: 24px; }
+        .admin-section h2 { font-size: 1.5rem; font-weight: 900; text-transform: uppercase; margin-bottom: 18px; }
+        label { font-weight: 700; display: block; margin-top: 12px; }
+        input[type="text"], input[type="email"], textarea { width: 100%; padding: 8px; border: 2px solid #000; background: #fff; color: #000; font-weight: 700; margin-bottom: 8px; }
+        textarea { min-height: 60px; }
+        button { background: #000; color: #fff; border: none; padding: 10px 24px; font-weight: 900; cursor: pointer; margin-top: 12px; }
+        button:hover { background: #222; }
+        .admin-list { margin-bottom: 18px; }
+        .admin-list-item { border-bottom: 1px solid #000; padding: 8px 0; }
+        .admin-list-item:last-child { border-bottom: none; }
+        .admin-actions { margin-top: 8px; }
+        .admin-img-preview { width: 100px; height: 100px; object-fit: cover; border: 2px solid #000; margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+    <h1>Admin Panel</h1>
+    <form class="admin-section" id="about-form">
+        <h2>About</h2>
+        <label>Name</label>
+        <input type="text" name="name" value="{{ about.name }}">
+        <label>Title</label>
+        <input type="text" name="title" value="{{ about.title }}">
+        <label>Bio</label>
+        <textarea name="bio">{{ about.bio }}</textarea>
+        <div id="about-links-list">
+            <label>Links</label>
+            {% set link_types = [
+                ('email', 'Email'),
+                ('github', 'GitHub'),
+                ('stackoverflow', 'Stack Overflow'),
+                ('reddit', 'Reddit'),
+                ('twitter', 'Twitter'),
+                ('linkedin', 'LinkedIn'),
+                ('website', 'Website')
+            ] %}
+            {% for link in about.links if about.links is defined %}
+            <div class="about-link-row">
+                <select name="link_type">
+                    {% for type, label in link_types %}
+                    <option value="{{ type }}" {% if link.type == type %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+                <input type="text" name="link_value" value="{{ link.value }}" placeholder="Enter link">
+                <button type="button" onclick="this.parentNode.remove()">Remove</button>
+            </div>
+            {% endfor %}
+        </div>
+        <button type="button" onclick="addAboutLink()">Add Link</button>
+        <label>Profile Picture</label>
+        <img src="/static/profile.jpg" class="admin-img-preview" alt="Profile Preview">
+        <input type="file" name="profile_pic">
+        <button type="submit">Save About</button>
+        <div id="about-save-msg"></div>
+    </form>
+
+    <form class="admin-section" id="entries-form">
+        <h2>Entries</h2>
+        <div class="admin-list" id="entries-list">
+            {% for entry in entries %}
+            <div class="admin-list-item">
+                <div class="admin-list-title" onclick="toggleExpand(this)">
+                    <strong>{{ entry.title }}</strong>
+                    <span style="float:right;cursor:pointer;">&#x25BC;</span>
+                </div>
+                <div class="admin-list-details" style="display:none;">
+                    <label>Title</label>
+                    <input type="text" name="title" value="{{ entry.title }}">
+                    <label>Excerpt</label>
+                    <textarea name="excerpt">{{ entry.excerpt if entry.excerpt is defined else '' }}</textarea>
+                    <label>Content</label>
+                    <textarea name="content">{{ entry.content if entry.content is defined else '' }}</textarea>
+                    <label>Date</label>
+                    <input type="text" name="date" value="{{ entry.date if entry.date is defined else '' }}">
+                    <label>Read Time</label>
+                    <input type="text" name="read_time" value="{{ entry.read_time if entry.read_time is defined else '' }}">
+                    <label>Technologies (comma separated)</label>
+                    <input type="text" name="technologies" value="{{ entry.technologies|join(', ') if entry.technologies is defined else '' }}">
+                    <label>Links (comma separated, type:value, e.g. github:https://github.com/yourrepo)</label>
+                    <input type="text" name="links" value="{% if entry.links is defined %}{% for l in entry.links %}{{ l.type }}:{{ l.value }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}">
+                    <div class="admin-actions">
+                        <button type="button" class="save-entry">Save</button>
+                        <button type="button" class="delete-entry">Delete</button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <button type="button" id="add-entry-btn">Add Entry</button>
+        <div id="entries-save-msg"></div>
+    </form>
+
+    <form class="admin-section" id="strings-form">
+        <h2>Strings (English)</h2>
+        {% for key, value in strings['en'].items() %}
+        <label>{{ key }}</label>
+        <input type="text" name="{{ key }}" value="{{ value }}">
+        {% endfor %}
+        <button type="submit">Save Strings</button>
+    </form>
+
+    <script>
+    function toggleExpand(titleDiv) {
+        var details = titleDiv.nextElementSibling;
+        if (details.style.display === 'none') {
+            details.style.display = 'block';
+            titleDiv.querySelector('span').innerHTML = '&#x25B2;';
+        } else {
+            details.style.display = 'none';
+            titleDiv.querySelector('span').innerHTML = '&#x25BC;';
+        }
+    }
+
+    function addAboutLink() {
+        var linkTypes = [
+            ['email', 'Email'],
+            ['github', 'GitHub'],
+            ['stackoverflow', 'Stack Overflow'],
+            ['reddit', 'Reddit'],
+            ['twitter', 'Twitter'],
+            ['linkedin', 'LinkedIn'],
+            ['website', 'Website']
+        ];
+        var row = document.createElement('div');
+        row.className = 'about-link-row';
+        var select = document.createElement('select');
+        select.name = 'link_type';
+        linkTypes.forEach(function(type) {
+            var opt = document.createElement('option');
+            opt.value = type[0];
+            opt.textContent = type[1];
+            select.appendChild(opt);
+        });
+        var input = document.createElement('input');
+        input.type = 'text';
+        input.name = 'link_value';
+        input.placeholder = 'Enter link';
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.textContent = 'Remove';
+        btn.onclick = function() { row.remove(); };
+        row.appendChild(select);
+        row.appendChild(input);
+        row.appendChild(btn);
+        document.getElementById('about-links-list').appendChild(row);
+    }
+
+    document.getElementById('about-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const form = e.target;
+        const data = {
+            name: form.name.value,
+            title: form.title.value,
+            bio: form.bio.value,
+            links: []
+        };
+        // Collect links
+        document.querySelectorAll('#about-links-list .about-link-row').forEach(row => {
+            const type = row.querySelector('select[name="link_type"]').value;
+            const value = row.querySelector('input[name="link_value"]').value;
+            if (type && value) {
+                data.links.push({type, value});
+            }
+        });
+        // TODO: handle profile_pic upload
+        const res = await fetch('/admin/save_about', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        const msg = document.getElementById('about-save-msg');
+        if (res.ok) {
+            msg.textContent = 'Saved!';
+            msg.style.color = 'green';
+        } else {
+            msg.textContent = 'Error saving.';
+            msg.style.color = 'red';
+        }
+    });
+
+    document.getElementById('add-entry-btn').onclick = function() {
+        var list = document.getElementById('entries-list');
+        var div = document.createElement('div');
+        div.className = 'admin-list-item';
+        div.innerHTML = `
+            <div class="admin-list-title" onclick="toggleExpand(this)">
+                <strong>New Entry</strong>
+                <span style="float:right;cursor:pointer;">&#x25BC;</span>
+            </div>
+            <div class="admin-list-details" style="display:none;">
+                <label>Title</label>
+                <input type="text" name="title" value="">
+                <label>Excerpt</label>
+                <textarea name="excerpt"></textarea>
+                <label>Content</label>
+                <textarea name="content"></textarea>
+                <label>Date</label>
+                <input type="text" name="date" value="">
+                <label>Read Time</label>
+                <input type="text" name="read_time" value="">
+                <label>Technologies (comma separated)</label>
+                <input type="text" name="technologies" value="">
+                <label>Links (comma separated, type:value, e.g. github:https://github.com/yourrepo)</label>
+                <input type="text" name="links" value="">
+                <div class="admin-actions">
+                    <button type="button" class="save-entry">Save</button>
+                    <button type="button" class="delete-entry">Delete</button>
+                </div>
+            </div>
+        `;
+        list.appendChild(div);
+    };
+    </script>
+</body>
+</html> 

@@ -36,23 +36,20 @@ async def handle_index(request):
     try:
         # Load all JSON data
         about = await load_json_data('about.json')
-        projects = await load_json_data('projects.json')
-        posts = await load_json_data('posts.json')
+        entries = await load_json_data('entries.json')
         strings_all = await load_json_data('strings.json')
         lang = 'en'  # In the future, this could be dynamic
         strings = strings_all.get(lang, {})
 
-        # Combine and sort all content by date (descending)
+        # Sort entries by date (descending)
         def get_date(item):
             return item.get('date', '0000-00-00')
-        all_content = sorted(projects + posts, key=get_date, reverse=True)
+        entries_sorted = sorted(entries, key=get_date, reverse=True)
 
         # Prepare context for template
         context = {
             'about': about,
-            'projects': projects,
-            'posts': posts,
-            'all_content': all_content,
+            'entries': entries_sorted,
             'strings': strings
         }
         
@@ -96,6 +93,45 @@ async def handle_submit(request):
             'message': f'An error occurred while processing your request: {str(e)}'
         }, status=500)
 
+@aiohttp_jinja2.template('admin.html')
+async def handle_admin(request):
+    about = await load_json_data('about.json')
+    entries = await load_json_data('entries.json')
+    strings = await load_json_data('strings.json')
+    return {
+        'about': about,
+        'entries': entries,
+        'strings': strings
+    }
+
+async def handle_save_about(request):
+    try:
+        data = await request.json()
+        about_path = Path(__file__).parent / 'data' / 'about.json'
+        with open(about_path, 'w', encoding='utf-8') as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+        return web.json_response({'status': 'ok'})
+    except Exception as e:
+        return web.json_response({'status': 'error', 'error': str(e)}, status=500)
+
+@aiohttp_jinja2.template('entry_detail.html')
+async def handle_entry_detail(request):
+    entry_id = int(request.match_info['entry_id'])
+    entries = await load_json_data('entries.json')
+    about = await load_json_data('about.json')
+    strings_all = await load_json_data('strings.json')
+    lang = 'en'
+    strings = strings_all.get(lang, {})
+    if 0 <= entry_id < len(entries):
+        entry = entries[entry_id]
+    else:
+        raise web.HTTPNotFound()
+    return {
+        'about': about,
+        'entry': entry,
+        'strings': strings
+    }
+
 def create_app():
     app = web.Application()
     
@@ -111,5 +147,8 @@ def create_app():
     # Add routes
     app.router.add_get('/', handle_index)
     app.router.add_post('/submit', handle_submit)
+    app.router.add_get('/admin', handle_admin)
+    app.router.add_post('/admin/save_about', handle_save_about)
+    app.router.add_get('/entry/{entry_id}', handle_entry_detail)
     
     return app
