@@ -12,6 +12,9 @@
     "top": "Top",
     "success_message": "Thank you! We will send the resume to {email} regarding '{regarding}' shortly.",
     "error_required": "All fields are required.",
-    "error_generic": "An error occurred. Please try again."
+    "error_generic": "An error occurred. Please try again.",
+    "captcha_prompt": "Prove you're human:",
+    "captcha_unlocked": "✓ Unlocked!",
+    "captcha_try_again": "Try again"
   }
 } 

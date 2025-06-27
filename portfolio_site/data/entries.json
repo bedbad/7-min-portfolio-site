@@ -1,38 +1,52 @@
 [
   {
+    "id": 1,
     "title": "Computer Vision Model",
-    "content": "YOLO-based object detection system.",
-    "technologies": ["Python", "PyTorch", "OpenCV", "Docker"],
-    "links": [
-      {"type": "github", "value": "https://github.com/yourusername/project1"},
-      {"type": "website", "value": "https://demo.example.com"}
-    ]
+    "excerpt": "",
+    "content": "**Bold text**  \n\n_Italic text_  \n\n~~Strikethrough~~\n\n- Unordered list item 1\n- Unordered list item 2\n\n1. Ordered list item 1\n2. Ordered list item 2\n\n[My Portfolio](https://yourwebsite.com)\n\n![GitHub followers](https://img.shields.io/github/followers/yourusername?label=Follow&style=social)\n\n<img src=\"https://media.giphy.com/media/hvRJCLFzcasrR4ia7z/giphy.gif\" width=\"30px\">\n\n\n\nBla\n\nmore lines",
+    "date": "",
+    "read_time": "",
+    "technologies": [
+      "Python",
+      "PyTorch",
+      "OpenCV",
+      "Docker"
+    ],
+    "links": []
   },
   {
+    "id": 2,
     "title": "NLP Chatbot",
+    "excerpt": "",
     "content": "Conversational AI using transformers.",
-    "technologies": ["Python", "TensorFlow", "BERT", "FastAPI"],
-    "links": [
-      {"type": "github", "value": "https://github.com/yourusername/project2"},
-      {"type": "website", "value": "https://demo.example.com"}
-    ]
+    "date": "",
+    "read_time": "",
+    "technologies": [
+      "Python",
+      "TensorFlow",
+      "BERT",
+      "FastAPI"
+    ],
+    "links": []
   },
   {
+    "id": 3,
     "title": "Understanding Transformer Architecture",
     "excerpt": "Deep dive into transformers.",
+    "content": "",
     "date": "2024-01-15",
     "read_time": "8 min read",
-    "links": [
-      {"type": "website", "value": "https://blog.example.com/transformer-architecture"}
-    ]
+    "technologies": [],
+    "links": []
   },
   {
+    "id": 4,
     "title": "Building Production ML Systems",
     "excerpt": "Deploying ML at scale.",
+    "content": "",
     "date": "2024-01-10",
     "read_time": "12 min read",
-    "links": [
-      {"type": "website", "value": "https://blog.example.com/production-ml"}
-    ]
+    "technologies": [],
+    "links": []
   }
-] 
+]

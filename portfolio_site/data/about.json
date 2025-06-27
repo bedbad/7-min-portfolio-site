@@ -1,11 +1,12 @@
 {
   "name": "Your Name",
   "title": "Machine Learning Specialist",
-  "bio": "Passionate ML engineer with expertise in deep learning, computer vision, and NLP",
+  "bio": "Passionate ML engineer with expertise in deep learning, computer vision, and NLP\n![GitHub followers](https://img.shields.io/github/followers/yourusername?label=Follow&style=social)\n\n<img src=\"https://media.giphy.com/media/hvRJCLFzcasrR4ia7z/giphy.gif\" width=\"30px\">\n",
   "links": [
     {
       "type": "email",
       "value": "antonyuk@bu.edu"
     }
-  ]
+  ],
+  "admin_password_hash": "c1ab19bce5e1a7f141bb996d34e1fcc8$a2966b4fd0d1b31a39727d057ced0f65dc71f7ff96707259b0d67962f2e91f16"
 }

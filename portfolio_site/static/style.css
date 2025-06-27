@@ -385,4 +385,131 @@ html, body {
 
 .section#resume {
     padding-bottom: 80px;
+}
+
+/* Markdown Content Styling */
+.bio, .entry-excerpt, .entry-content {
+    line-height: 1.6;
+}
+
+.bio p, .entry-excerpt p, .entry-content p {
+    margin-bottom: 12px;
+    margin-top: 0;
+}
+
+.bio h1, .bio h2, .bio h3, .bio h4, .bio h5, .bio h6,
+.entry-excerpt h1, .entry-excerpt h2, .entry-excerpt h3, .entry-excerpt h4, .entry-excerpt h5, .entry-excerpt h6,
+.entry-content h1, .entry-content h2, .entry-content h3, .entry-content h4, .entry-content h5, .entry-content h6 {
+    font-weight: 900;
+    margin-top: 24px;
+    margin-bottom: 12px;
+    color: #000;
+}
+
+.bio h1, .entry-excerpt h1, .entry-content h1 { font-size: 1.8rem; }
+.bio h2, .entry-excerpt h2, .entry-content h2 { font-size: 1.6rem; }
+.bio h3, .entry-excerpt h3, .entry-content h3 { font-size: 1.4rem; }
+.bio h4, .entry-excerpt h4, .entry-content h4 { font-size: 1.2rem; }
+.bio h5, .entry-excerpt h5, .entry-content h5 { font-size: 1.1rem; }
+.bio h6, .entry-excerpt h6, .entry-content h6 { font-size: 1rem; }
+
+.bio code, .entry-excerpt code, .entry-content code {
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    padding: 2px 6px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    font-weight: 700;
+}
+
+.bio pre, .entry-excerpt pre, .entry-content pre {
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 16px;
+    overflow-x: auto;
+    margin: 16px 0;
+}
+
+.bio pre code, .entry-excerpt pre code, .entry-content pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 0.9em;
+    line-height: 1.4;
+}
+
+.bio a, .entry-excerpt a, .entry-content a {
+    color: #000;
+    text-decoration: underline;
+    font-weight: 700;
+}
+
+.bio a:hover, .entry-excerpt a:hover, .entry-content a:hover {
+    color: #000;
+    text-decoration: none;
+}
+
+.bio ul, .bio ol, .entry-excerpt ul, .entry-excerpt ol, .entry-content ul, .entry-content ol {
+    margin: 12px 0;
+    padding-left: 24px;
+}
+
+.bio li, .entry-excerpt li, .entry-content li {
+    margin-bottom: 6px;
+    font-weight: 700;
+}
+
+.bio blockquote, .entry-excerpt blockquote, .entry-content blockquote {
+    border-left: 4px solid #000;
+    margin: 16px 0;
+    padding-left: 16px;
+    font-style: italic;
+    font-weight: 700;
+}
+
+.bio strong, .entry-excerpt strong, .entry-content strong {
+    font-weight: 900;
+}
+
+.bio em, .entry-excerpt em, .entry-content em {
+    font-style: italic;
+    font-weight: 700;
+}
+
+.bio del, .entry-excerpt del, .entry-content del,
+.bio s, .entry-excerpt s, .entry-content s {
+    text-decoration: line-through;
+    font-weight: 700;
+}
+
+.bio u, .entry-excerpt u, .entry-content u {
+    text-decoration: underline;
+    font-weight: 700;
+}
+
+.bio mark, .entry-excerpt mark, .entry-content mark {
+    background-color: #ffff00;
+    font-weight: 700;
+}
+
+.bio table, .entry-excerpt table, .entry-content table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 16px 0;
+}
+
+.bio th, .entry-excerpt th, .entry-content th,
+.bio td, .entry-excerpt td, .entry-content td {
+    border: 1px solid #000;
+    padding: 8px 12px;
+    text-align: left;
+    font-weight: 700;
+}
+
+.bio th, .entry-excerpt th, .entry-content th {
+    background: #000;
+    color: #fff;
+    font-weight: 900;
 } 

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ entry.title }}</title>
     <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
     <!-- Fixed Navigation -->
@@ -74,12 +75,10 @@
                 </div>
             {% endif %}
             
-            {% if entry.excerpt %}
-                <div class="entry-excerpt" style="font-size:1.2rem;font-weight:700;margin-bottom:18px;">{{ entry.excerpt }}</div>
-            {% endif %}
-            
             {% if entry.content %}
-                <div class="entry-content" style="margin-bottom:18px;">{{ entry.content }}</div>
+                <div class="entry-content" style="margin-bottom:18px;" data-markdown="{{ entry.content }}">{{ entry.content }}</div>
+            {% elif entry.excerpt %}
+                <div class="entry-content" style="margin-bottom:18px;" data-markdown="{{ entry.excerpt }}">{{ entry.excerpt }}</div>
             {% endif %}
         </article>
     </div>
@@ -94,6 +93,35 @@
                 nav.classList.remove('scrolled');
             }
         });
+    </script>
+
+    <!-- Markdown Rendering Script -->
+    <script>
+        // Configure marked.js for GitHub Flavored Markdown
+        marked.setOptions({
+            gfm: true, // GitHub Flavored Markdown
+            breaks: true, // Convert \n to <br>
+            headerIds: true, // Add ids to headers
+            mangle: false, // Don't mangle email addresses
+            sanitize: false, // Allow HTML
+            smartLists: true, // Use smarter list behavior
+            smartypants: true, // Use smart typographic punctuation
+            xhtml: false // Don't use XHTML output
+        });
+
+        // Function to render markdown content
+        function renderMarkdownContent() {
+            // Render all entry excerpts and content
+            document.querySelectorAll('[data-markdown]').forEach(element => {
+                const markdownText = element.getAttribute('data-markdown');
+                if (markdownText) {
+                    element.innerHTML = marked.parse(markdownText);
+                }
+            });
+        }
+
+        // Render markdown when DOM is loaded
+        document.addEventListener('DOMContentLoaded', renderMarkdownContent);
     </script>
 </body>
 </html> 

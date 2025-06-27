@@ -22,7 +22,13 @@
     </style>
 </head>
 <body>
-    <h1>Admin Panel</h1>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
+        <h1>Admin Panel</h1>
+        <div>
+            <button type="button" onclick="showChangePassword()" style="margin-right: 16px;">Change Password</button>
+            <a href="/admin/logout" style="background: #000; color: #fff; border: none; padding: 10px 24px; font-weight: 900; cursor: pointer; text-decoration: none;">Logout</a>
+        </div>
+    </div>
     <form class="admin-section" id="about-form">
         <h2>About</h2>
         <label>Name</label>
@@ -72,6 +78,8 @@
                     <span style="float:right;cursor:pointer;">&#x25BC;</span>
                 </div>
                 <div class="admin-list-details" style="display:none;">
+                    <label>ID</label>
+                    <input type="number" name="id" value="{{ entry.id }}" readonly>
                     <label>Title</label>
                     <input type="text" name="title" value="{{ entry.title }}">
                     <label>Excerpt</label>
@@ -190,12 +198,27 @@
         var list = document.getElementById('entries-list');
         var div = document.createElement('div');
         div.className = 'admin-list-item';
+        
+        // Find the next available ID
+        const existingIds = new Set();
+        document.querySelectorAll('#entries-list input[name="id"]').forEach(input => {
+            if (input.value.trim()) {
+                existingIds.add(parseInt(input.value));
+            }
+        });
+        let nextId = 1;
+        while (existingIds.has(nextId)) {
+            nextId++;
+        }
+        
         div.innerHTML = `
             <div class="admin-list-title" onclick="toggleExpand(this)">
                 <strong>New Entry</strong>
                 <span style="float:right;cursor:pointer;">&#x25BC;</span>
             </div>
             <div class="admin-list-details" style="display:none;">
+                <label>ID</label>
+                <input type="number" name="id" value="${nextId}" readonly>
                 <label>Title</label>
                 <input type="text" name="title" value="">
                 <label>Excerpt</label>
@@ -218,6 +241,200 @@
         `;
         list.appendChild(div);
     };
+
+    // Add event listeners for save and delete buttons
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('save-entry')) {
+            saveEntry(e.target);
+        } else if (e.target.classList.contains('delete-entry')) {
+            deleteEntry(e.target);
+        }
+    });
+
+    async function saveEntry(button) {
+        const entryDiv = button.closest('.admin-list-item');
+        const inputs = entryDiv.querySelectorAll('input, textarea');
+        
+        // Parse the current entries
+        const entries = [];
+        const existingIds = new Set();
+        
+        // First pass: collect existing IDs
+        document.querySelectorAll('#entries-list .admin-list-item').forEach(item => {
+            const idInput = item.querySelector('input[name="id"]');
+            if (idInput && idInput.value.trim()) {
+                existingIds.add(parseInt(idInput.value));
+            }
+        });
+        
+        // Find the next available ID
+        let nextId = 1;
+        while (existingIds.has(nextId)) {
+            nextId++;
+        }
+        
+        document.querySelectorAll('#entries-list .admin-list-item').forEach(item => {
+            const idInput = item.querySelector('input[name="id"]');
+            const titleInput = item.querySelector('input[name="title"]');
+            const excerptInput = item.querySelector('textarea[name="excerpt"]');
+            const contentInput = item.querySelector('textarea[name="content"]');
+            const dateInput = item.querySelector('input[name="date"]');
+            const readTimeInput = item.querySelector('input[name="read_time"]');
+            const technologiesInput = item.querySelector('input[name="technologies"]');
+            const linksInput = item.querySelector('input[name="links"]');
+            
+            if (titleInput && titleInput.value.trim()) {
+                // Preserve existing ID or assign new one
+                let entryId;
+                if (idInput && idInput.value.trim()) {
+                    entryId = parseInt(idInput.value);
+                } else {
+                    entryId = nextId++;
+                    // Update the input field with the new ID
+                    idInput.value = entryId;
+                }
+                
+                const entry = {
+                    id: entryId,
+                    title: titleInput.value.trim(),
+                    excerpt: excerptInput ? excerptInput.value.trim() : '',
+                    content: contentInput ? contentInput.value.trim() : '',
+                    date: dateInput ? dateInput.value.trim() : '',
+                    read_time: readTimeInput ? readTimeInput.value.trim() : ''
+                };
+                
+                // Parse technologies
+                if (technologiesInput && technologiesInput.value.trim()) {
+                    entry.technologies = technologiesInput.value.split(',').map(t => t.trim()).filter(t => t);
+                } else {
+                    entry.technologies = [];
+                }
+                
+                // Parse links
+                if (linksInput && linksInput.value.trim()) {
+                    entry.links = [];
+                    linksInput.value.split(',').forEach(linkStr => {
+                        const parts = linkStr.trim().split(':');
+                        if (parts.length === 2) {
+                            entry.links.push({
+                                type: parts[0].trim(),
+                                value: parts[1].trim()
+                            });
+                        }
+                    });
+                } else {
+                    entry.links = [];
+                }
+                
+                entries.push(entry);
+            }
+        });
+        
+        try {
+            const res = await fetch('/admin/save_entries', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(entries)
+            });
+            
+            const msg = document.getElementById('entries-save-msg');
+            if (res.ok) {
+                msg.textContent = 'Entries saved!';
+                msg.style.color = 'green';
+                setTimeout(() => { msg.textContent = ''; }, 3000);
+            } else {
+                msg.textContent = 'Error saving entries.';
+                msg.style.color = 'red';
+            }
+        } catch (error) {
+            console.error('Error saving entries:', error);
+            const msg = document.getElementById('entries-save-msg');
+            msg.textContent = 'Error saving entries.';
+            msg.style.color = 'red';
+        }
+    }
+
+    async function deleteEntry(button) {
+        if (confirm('Are you sure you want to delete this entry?')) {
+            const entryDiv = button.closest('.admin-list-item');
+            entryDiv.remove();
+            // Auto-save after deletion
+            await saveEntry(button);
+        }
+    }
+    </script>
+
+    <!-- Password Change Modal -->
+    <div id="password-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; border: 2px solid #000; padding: 32px; max-width: 400px; width: 100%;">
+            <h2 style="margin-bottom: 24px;">Change Password</h2>
+            <form id="password-form">
+                <label>Current Password</label>
+                <input type="password" name="current_password" required style="width: 100%; padding: 8px; border: 2px solid #000; background: #fff; color: #000; font-weight: 700; margin-bottom: 16px;">
+                <label>New Password</label>
+                <input type="password" name="new_password" required style="width: 100%; padding: 8px; border: 2px solid #000; background: #fff; color: #000; font-weight: 700; margin-bottom: 16px;">
+                <label>Confirm New Password</label>
+                <input type="password" name="confirm_password" required style="width: 100%; padding: 8px; border: 2px solid #000; background: #fff; color: #000; font-weight: 700; margin-bottom: 24px;">
+                <div style="display: flex; gap: 16px;">
+                    <button type="submit" style="background: #000; color: #fff; border: none; padding: 10px 24px; font-weight: 900; cursor: pointer;">Change Password</button>
+                    <button type="button" onclick="hideChangePassword()" style="background: #fff; color: #000; border: 2px solid #000; padding: 10px 24px; font-weight: 900; cursor: pointer;">Cancel</button>
+                </div>
+            </form>
+            <div id="password-message" style="margin-top: 16px; font-weight: 700;"></div>
+        </div>
+    </div>
+
+    <script>
+    function showChangePassword() {
+        document.getElementById('password-modal').style.display = 'block';
+    }
+
+    function hideChangePassword() {
+        document.getElementById('password-modal').style.display = 'none';
+        document.getElementById('password-form').reset();
+        document.getElementById('password-message').textContent = '';
+    }
+
+    document.getElementById('password-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const form = e.target;
+        const currentPassword = form.current_password.value;
+        const newPassword = form.new_password.value;
+        const confirmPassword = form.confirm_password.value;
+        const messageDiv = document.getElementById('password-message');
+
+        if (newPassword !== confirmPassword) {
+            messageDiv.textContent = 'New passwords do not match';
+            messageDiv.style.color = 'red';
+            return;
+        }
+
+        try {
+            const response = await fetch('/admin/change_password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    current_password: currentPassword,
+                    new_password: newPassword
+                })
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                messageDiv.textContent = data.message;
+                messageDiv.style.color = 'green';
+                setTimeout(() => {
+                    hideChangePassword();
+                }, 2000);
+            } else {
+                messageDiv.textContent = data.message;
+                messageDiv.style.color = 'red';
+            }
+        } catch (error) {
+            messageDiv.textContent = 'An error occurred. Please try again.';
+            messageDiv.style.color = 'red';
+        }
+    });
     </script>
 </body>
 </html> 
