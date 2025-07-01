@@ -9,9 +9,9 @@
 
   Design - took 1 minute
 
-  Start with the design prompt and best suitable model on some top level interface such using "you're an expert python backend developer
-  ...tasked with designing simple possible website satusfying the ... using only python aiohttp and managing all database-suitable content in JSON files"
-  with /admin side to manage all that content; organize entire design in steps with 1 concrete prompt for another developer agent"
+  Start with the design prompt and best suitable model on some top level interface such using "_you're an expert python backend developer
+  ...tasked with designing simple possible website satusfying the ... using only python aiohttp and managing all database-suitable content in JSON files
+  with /admin side to manage all that content; organize entire design in steps with 1 concrete prompt for another developer agent_"
   Review the steps till the design presents the most simple function for your project task purpose 
 
   Development - took 4 minutes
