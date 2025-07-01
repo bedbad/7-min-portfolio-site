@@ -1,6 +1,6 @@
-## Idea: python main.py and json files as database - all you need for websites until it gets a thousand users
+## Idea: python main.py and json files as database - all you need for websites until it gets a thousand users..
 
-#HowTo develop something as this in few minutes
+# HowTo develop something as this in few minutes
   The development speed with LLMs drastically depends on 
   1) the choices of limitations explicitly specified, by far
   2) choice of models
